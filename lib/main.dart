@@ -33,7 +33,6 @@ class TodoPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /// [dataProvider]を監視して、データを取得する
     final todo = ref.watch(todoRepositoryProvider);
     return Scaffold(
       appBar: AppBar(
