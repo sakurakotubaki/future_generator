@@ -1,4 +1,4 @@
-import 'package:api_app/provider/future.dart';
+import 'package:api_app/domain/repository/todo_repo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -32,34 +33,26 @@ class TodoPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /// [todosProvider]を監視して、データを取得する
-    /// generatorを使わない場合は、普通のFutureProviderを使う
-    final todo = ref.watch(todosProvider);
+    /// [dataProvider]を監視して、データを取得する
+    final todo = ref.watch(todoRepositoryProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Todo'),
+        title: const Text('DTO MVVM'),
       ),
       // [todo]の状態によって、表示するWidgetを変更する
-      body: todo.when(
-        data: (todos) {
-          return ListView.builder(
-            itemCount: todos.length,// [todos]の長さ分、Widgetを作成する
+      body: switch (todo) {
+        AsyncData(:final value) => ListView.builder(
+            itemCount: value.length,
             itemBuilder: (context, index) {
-              final todo = todos[index];// [todos]のindex番目のデータを取得する
               return ListTile(
-                title: Text(todo.title),
-                subtitle: Text(todo.id.toString()),
+                title: Text(value[index].title),
+                subtitle: Text(value[index].id.toString()),
               );
             },
-          );
-        },
-        error: (_, __) => const Center(// [todo]の状態がエラーの場合の処理
-          child: Text('Error'),
-        ),
-        loading: () => const Center(// [todo]の状態がロード中の場合の処理
-          child: CircularProgressIndicator(),
-        ),
-        ),
+          ),
+        AsyncError(:final error) => Text('Error: $error'),
+        _ => const CircularProgressIndicator(),
+      },
     );
   }
 }
