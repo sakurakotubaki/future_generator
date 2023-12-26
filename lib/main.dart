@@ -1,4 +1,4 @@
-import 'package:api_app/domain/repository/todo_repo.dart';
+import 'package:api_app/view/todo_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,37 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const TodoPage(),
-    );
-  }
-}
-
-/// [APIのデータを表示する画面]
-class TodoPage extends ConsumerWidget {
-  const TodoPage({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    /// [dataProvider]を監視して、データを取得する
-    final todo = ref.watch(todoRepositoryProvider);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('DTO MVVM'),
-      ),
-      // [todo]の状態によって、表示するWidgetを変更する
-      body: switch (todo) {
-        AsyncData(:final value) => ListView.builder(
-            itemCount: value.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(value[index].title),
-                subtitle: Text(value[index].id.toString()),
-              );
-            },
-          ),
-        AsyncError(:final error) => Text('Error: $error'),
-        _ => const CircularProgressIndicator(),
-      },
+      home: const TodoVIew(),
     );
   }
 }
