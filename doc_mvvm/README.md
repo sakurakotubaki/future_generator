@@ -1,4 +1,4 @@
-# MVVM + Reositoryバターン
+# MVVM + Reositoryパターン
 riverpod_generatorを使用してAPI通信をおこなうサンプルを作成しました。
 
 https://pub.dev/packages/riverpod_generator
